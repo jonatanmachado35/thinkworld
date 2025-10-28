@@ -27,7 +27,7 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <img 
-              src="/lovable-uploads/5e73b650-051e-4036-a27d-dd9c601386c3.png" 
+              src="/lovable-uploads/logotipo.png" 
               alt="ThinkWorld" 
               className="h-8 w-auto"
             />
