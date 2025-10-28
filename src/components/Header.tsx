@@ -8,10 +8,17 @@ const Header = () => {
   const navItems = [
     { label: "Home", href: "#home" },
     { label: "Serviços", href: "#services" },
-    { label: "Sobre", href: "#about" },
-    { label: "Portfólio", href: "#portfolio" },
     { label: "Contato", href: "#contact" }
   ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      setIsMenuOpen(false);
+    }
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
@@ -32,7 +39,8 @@ const Header = () => {
               <a
                 key={item.label}
                 href={item.href}
-                className="text-sm font-medium text-foreground hover:text-accent transition-colors"
+                onClick={(e) => handleNavClick(e, item.href)}
+                className="text-sm font-medium text-foreground hover:text-accent transition-colors cursor-pointer"
               >
                 {item.label}
               </a>
@@ -67,8 +75,8 @@ const Header = () => {
                 <a
                   key={item.label}
                   href={item.href}
-                  className="text-sm font-medium text-foreground hover:text-accent transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
+                  className="text-sm font-medium text-foreground hover:text-accent transition-colors cursor-pointer"
+                  onClick={(e) => handleNavClick(e, item.href)}
                 >
                   {item.label}
                 </a>
