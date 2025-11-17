@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { api } from "@/services"
 import { Mail, Phone, MapPin, Send } from "lucide-react"
 import { useState, FormEvent } from "react"
 
@@ -24,8 +25,27 @@ const Contact = () => {
     mensagem: "",
   })
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    console.log("Dados do formulário:", formData)
+    console.log("----------------------------")
+    console.log("Nome:", formData.nome)
+    console.log("Email:", formData.email)
+    console.log("Telefone:", formData.telefone)
+    console.log("Empresa:", formData.empresa)
+    console.log("Tipo de Projeto:", formData.tipoProjeto)
+    console.log("Mensagem:", formData.mensagem)
+    console.log("----------------------------")
+
+    try {
+      const response = await api.post("/atendimento", formData)
+      console.log("Resposta da API:", response.data)
+      alert("Formulário enviado com sucesso!")
+    } catch (error) {
+      console.error("Erro ao enviar formulário:", error)
+      alert("Erro ao enviar formulário. Tente novamente.")
+    }
   }
 
   const handleChange = (
@@ -35,6 +55,35 @@ const Contact = () => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }))
+  }
+
+  const formatPhoneNumber = (value: string) => {
+    // Remove tudo que não é número
+    const numbers = value.replace(/\D/g, "")
+
+    // Limita a 11 dígitos
+    const limited = numbers.slice(0, 11)
+
+    // Aplica a máscara
+    if (limited.length <= 2) {
+      return limited
+    } else if (limited.length <= 7) {
+      return `(${limited.slice(0, 2)}) ${limited.slice(2)}`
+    } else if (limited.length <= 11) {
+      return `(${limited.slice(0, 2)}) ${limited.slice(2, 7)}-${limited.slice(
+        7
+      )}`
+    }
+
+    return limited
+  }
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value)
+    setFormData((prev) => ({
+      ...prev,
+      telefone: formatted,
     }))
   }
 
@@ -105,8 +154,8 @@ const Contact = () => {
                         type="tel"
                         name="telefone"
                         value={formData.telefone}
-                        onChange={handleChange}
-                        placeholder="+55 (11) 99999-9999"
+                        onChange={handlePhoneChange}
+                        placeholder="(11) 99999-9999"
                         required
                       />
                     </div>
