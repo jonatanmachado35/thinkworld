@@ -1,67 +1,42 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
-import { useState, FormEvent } from "react";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Mail, Phone, MapPin, Send } from "lucide-react"
+import { useState, FormEvent } from "react"
+
+type FormData = {
+  nome: string
+  email: string
+  telefone: string
+  empresa: string
+  tipoProjeto: string
+  mensagem: string
+}
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     nome: "",
     email: "",
     telefone: "",
     empresa: "",
     tipoProjeto: "",
-    mensagem: ""
-  });
+    mensagem: "",
+  })
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Dados do formulário:", formData);
-    console.log("----------------------------");
-    console.log("Nome:", formData.nome);
-    console.log("Email:", formData.email);
-    console.log("Telefone:", formData.telefone);
-    console.log("Empresa:", formData.empresa);
-    console.log("Tipo de Projeto:", formData.tipoProjeto);
-    console.log("Mensagem:", formData.mensagem);
-    console.log("----------------------------");
-  };
+    e.preventDefault()
+  }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
-    }));
-  };
-
-  const formatPhoneNumber = (value: string) => {
-    // Remove tudo que não é número
-    const numbers = value.replace(/\D/g, '');
-
-    // Limita a 11 dígitos
-    const limited = numbers.slice(0, 11);
-
-    // Aplica a máscara
-    if (limited.length <= 2) {
-      return limited;
-    } else if (limited.length <= 7) {
-      return `(${limited.slice(0, 2)}) ${limited.slice(2)}`;
-    } else if (limited.length <= 11) {
-      return `(${limited.slice(0, 2)}) ${limited.slice(2, 7)}-${limited.slice(7)}`;
-    }
-
-    return limited;
-  };
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhoneNumber(e.target.value);
-    setFormData(prev => ({
-      ...prev,
-      telefone: formatted
-    }));
-  };
+      [name]: value,
+    }))
+  }
 
   return (
     <section id="contact" className="py-20 bg-muted/30">
@@ -71,16 +46,16 @@ const Contact = () => {
             <Send className="w-4 h-4 text-accent" />
             <span className="text-sm font-medium text-accent">Contato</span>
           </div>
-          
           <h2 className="text-3xl md:text-5xl font-bold text-foreground">
             Vamos Conversar sobre seu{" "}
             <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               Projeto
-            </span>
-          </h2>
-          
+            </span>{" "}
+          </h2>{" "}
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Estamos prontos para transformar suas ideias em soluções digitais inovadoras
+            {" "}
+            Estamos prontos para transformar suas ideias em soluções digitais
+            inovadoras
           </p>
         </div>
 
@@ -130,8 +105,8 @@ const Contact = () => {
                         type="tel"
                         name="telefone"
                         value={formData.telefone}
-                        onChange={handlePhoneChange}
-                        placeholder="(11) 99999-9999"
+                        onChange={handleChange}
+                        placeholder="+55 (11) 99999-9999"
                         required
                       />
                     </div>
@@ -174,7 +149,12 @@ const Contact = () => {
                     />
                   </div>
 
-                  <Button type="submit" variant="hero" size="lg" className="w-full">
+                  <Button
+                    type="submit"
+                    variant="hero"
+                    size="lg"
+                    className="w-full"
+                  >
                     Enviar Mensagem
                     <Send className="w-5 h-5" />
                   </Button>
@@ -196,10 +176,12 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-medium text-foreground">Email</h4>
-                    <p className="text-muted-foreground">jonatanmachado35@gmail.com</p>
+                    <p className="text-muted-foreground">
+                      jonatanmachado35@gmail.com
+                    </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
                     <Phone className="w-5 h-5 text-primary-foreground" />
@@ -209,14 +191,16 @@ const Contact = () => {
                     <p className="text-muted-foreground">+55 (51) 99133-4348</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
                     <MapPin className="w-5 h-5 text-primary-foreground" />
                   </div>
                   <div>
                     <h4 className="font-medium text-foreground">Localização</h4>
-                    <p className="text-muted-foreground">Florianópolis, SC - Brasil</p>
+                    <p className="text-muted-foreground">
+                      Florianópolis, SC - Brasil
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -226,7 +210,8 @@ const Contact = () => {
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold mb-4">Pronto para Inovar?</h3>
                 <p className="text-primary-foreground/80 mb-6">
-                  Agende uma consulta gratuita e descubra como podemos acelerar sua transformação digital.
+                  Agende uma consulta gratuita e descubra como podemos acelerar
+                  sua transformação digital.
                 </p>
                 <Button variant="accent" className="w-full">
                   Agendar Consulta
@@ -237,7 +222,7 @@ const Contact = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Contact;
+export default Contact
