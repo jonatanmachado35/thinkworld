@@ -3,8 +3,66 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { useState, FormEvent } from "react";
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    nome: "",
+    email: "",
+    telefone: "",
+    empresa: "",
+    tipoProjeto: "",
+    mensagem: ""
+  });
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("Dados do formulário:", formData);
+    console.log("----------------------------");
+    console.log("Nome:", formData.nome);
+    console.log("Email:", formData.email);
+    console.log("Telefone:", formData.telefone);
+    console.log("Empresa:", formData.empresa);
+    console.log("Tipo de Projeto:", formData.tipoProjeto);
+    console.log("Mensagem:", formData.mensagem);
+    console.log("----------------------------");
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const formatPhoneNumber = (value: string) => {
+    // Remove tudo que não é número
+    const numbers = value.replace(/\D/g, '');
+
+    // Limita a 11 dígitos
+    const limited = numbers.slice(0, 11);
+
+    // Aplica a máscara
+    if (limited.length <= 2) {
+      return limited;
+    } else if (limited.length <= 7) {
+      return `(${limited.slice(0, 2)}) ${limited.slice(2)}`;
+    } else if (limited.length <= 11) {
+      return `(${limited.slice(0, 2)}) ${limited.slice(2, 7)}-${limited.slice(7)}`;
+    }
+
+    return limited;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    setFormData(prev => ({
+      ...prev,
+      telefone: formatted
+    }));
+  };
+
   return (
     <section id="contact" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -34,49 +92,93 @@ const Contact = () => {
                 <CardTitle>Envie sua Mensagem</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">
+                        Nome
+                      </label>
+                      <Input
+                        name="nome"
+                        value={formData.nome}
+                        onChange={handleChange}
+                        placeholder="Seu nome completo"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">
+                        Email
+                      </label>
+                      <Input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="seu@email.com"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">
+                        Telefone
+                      </label>
+                      <Input
+                        type="tel"
+                        name="telefone"
+                        value={formData.telefone}
+                        onChange={handlePhoneChange}
+                        placeholder="(11) 99999-9999"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">
+                        Empresa
+                      </label>
+                      <Input
+                        name="empresa"
+                        value={formData.empresa}
+                        onChange={handleChange}
+                        placeholder="Nome da sua empresa"
+                      />
+                    </div>
+                  </div>
+
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">
-                      Nome
+                      Tipo de Projeto
                     </label>
-                    <Input placeholder="Seu nome completo" />
+                    <Input
+                      name="tipoProjeto"
+                      value={formData.tipoProjeto}
+                      onChange={handleChange}
+                      placeholder="Ex: App Mobile, Automação, IA..."
+                    />
                   </div>
+
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">
-                      Email
+                      Mensagem
                     </label>
-                    <Input type="email" placeholder="seu@email.com" />
+                    <Textarea
+                      name="mensagem"
+                      value={formData.mensagem}
+                      onChange={handleChange}
+                      placeholder="Conte-nos sobre seu projeto e como podemos ajudar..."
+                      rows={6}
+                      required
+                    />
                   </div>
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Empresa
-                  </label>
-                  <Input placeholder="Nome da sua empresa" />
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Tipo de Projeto
-                  </label>
-                  <Input placeholder="Ex: App Mobile, Automação, IA..." />
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Mensagem
-                  </label>
-                  <Textarea 
-                    placeholder="Conte-nos sobre seu projeto e como podemos ajudar..." 
-                    rows={6}
-                  />
-                </div>
-                
-                <Button variant="hero" size="lg" className="w-full">
-                  Enviar Mensagem
-                  <Send className="w-5 h-5" />
-                </Button>
+
+                  <Button type="submit" variant="hero" size="lg" className="w-full">
+                    Enviar Mensagem
+                    <Send className="w-5 h-5" />
+                  </Button>
+                </form>
               </CardContent>
             </Card>
           </div>
